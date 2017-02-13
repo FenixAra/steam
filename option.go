@@ -26,6 +26,7 @@ func (o *Option) GetUrlEncode() string {
 
 	if o.AppID > 0 {
 		u.Add("appid", strconv.Itoa(o.AppID))
+		u.Add("gameid", strconv.Itoa(o.AppID))
 	}
 
 	if o.Count > 0 {

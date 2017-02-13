@@ -85,3 +85,38 @@ func (s *Steam) GetNews(o *Option) (*AppNews, error) {
 
 	return appNews, nil
 }
+
+type GlobalAchievements struct {
+	Percentages AchievementPercentages `json:"achievementpercentages"`
+}
+
+type AchievementPercentages struct {
+	Achievements []Achievement `json:"achievements"`
+}
+
+type Achievement struct {
+	Name       string  `json:"name"`
+	Percentage float32 `json:"percent"`
+}
+
+// Get global acheivements overview of a specific game in percentage
+func (s *Steam) GetGlobalAchievement(o *Option) (*GlobalAchievements, error) {
+	res, err := http.Get(BaseURL + "/ISteamUserStats/GetGlobalAchievementPercentagesForApp/v0002?" + o.GetUrlEncode())
+	if err != nil {
+		return nil, err
+	}
+
+	defer res.Body.Close()
+	data, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	acheivements := new(GlobalAchievements)
+	err = json.Unmarshal(data, &acheivements)
+	if err != nil {
+		return nil, err
+	}
+
+	return acheivements, nil
+}
