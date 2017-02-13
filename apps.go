@@ -19,7 +19,7 @@ type App struct {
 	Name  string `json:"name"`
 }
 
-// Get list of all apps along with their App IDs in JSON format
+// Get list of all apps present in steam along with their App IDs.
 func (s *Steam) GetAppList() (*Apps, error) {
 	res, err := http.Get(BaseURL + "/ISteamApps/GetAppList/v2?format=json")
 	if err != nil {
