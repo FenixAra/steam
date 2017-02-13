@@ -9,6 +9,7 @@ type Option struct {
 	AppID     int
 	Count     int
 	MaxLength int
+	Key       string
 }
 
 func NewOption(appID int) *Option {
@@ -19,6 +20,10 @@ func NewOption(appID int) *Option {
 
 func (o *Option) GetUrlEncode() string {
 	u := url.Values{}
+	if o.Key != "" {
+		u.Add("key", o.Key)
+	}
+
 	if o.AppID > 0 {
 		u.Add("appid", strconv.Itoa(o.AppID))
 	}

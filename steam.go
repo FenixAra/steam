@@ -5,7 +5,6 @@ const (
 )
 
 type Steam struct {
-	conf Config
 }
 
 func NewSteam() *Steam {
