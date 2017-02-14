@@ -10,6 +10,7 @@ type Option struct {
 	Count     int
 	MaxLength int
 	Key       string
+	Names     []string
 }
 
 func NewOption(appID int) *Option {
@@ -35,6 +36,12 @@ func (o *Option) GetUrlEncode() string {
 
 	if o.MaxLength > 0 {
 		u.Add("maxlength", strconv.Itoa(o.MaxLength))
+	}
+
+	if len(o.Names) > 0 {
+		for i, name := range o.Names {
+			u.Add("name["+strconv.Itoa(i)+"]", name)
+		}
 	}
 
 	u.Add("format", "json")

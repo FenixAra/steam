@@ -120,3 +120,38 @@ func (s *Steam) GetGlobalAchievement(o *Option) (*GlobalAchievements, error) {
 
 	return acheivements, nil
 }
+
+type GlobalStatsResponse struct {
+	GlobalStats GlobalStats `json:"response"`
+}
+
+type GlobalStats struct {
+	Stats  map[string]Stat `json:"globalstats"`
+	Result int             `json:"result"`
+}
+
+type Stat struct {
+	Total string `json:"total"`
+}
+
+// Get global stats detail for a particular achievement for the given game
+func (s *Steam) GetGlobalStatsForGame(o *Option) (*GlobalStatsResponse, error) {
+	res, err := http.Get(BaseURL + "/ISteamUserStats/GetGlobalStatsForGame/v0001?" + o.GetUrlEncode())
+	if err != nil {
+		return nil, err
+	}
+
+	defer res.Body.Close()
+	data, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	stats := new(GlobalStatsResponse)
+	err = json.Unmarshal(data, &stats)
+	if err != nil {
+		return nil, err
+	}
+
+	return stats, nil
+}

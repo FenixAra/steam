@@ -60,3 +60,26 @@ func TestGetGlobalAchievement(t *testing.T) {
 		t.FailNow()
 	}
 }
+
+func TestGetGlobalStatsForGame(t *testing.T) {
+	steam := NewSteam()
+	o := NewOption(17740)
+	o.Count = 1
+	o.Names = []string{"global.map.emp_isle"}
+
+	stats, err := steam.GetGlobalStatsForGame(o)
+	if err != nil {
+		t.Error("Unable to get global stats for a game and achievement. Err: ", err)
+		t.FailNow()
+	}
+
+	if stats == nil {
+		t.Error("Unable to get global stats for a game and achievement. Value is nil.")
+		t.FailNow()
+	}
+
+	if _, ok := stats.GlobalStats.Stats["global.map.emp_isle"]; !ok {
+		t.Error("Unable to get global stats for a game and achievement global.map.emp_isle.")
+		t.FailNow()
+	}
+}
