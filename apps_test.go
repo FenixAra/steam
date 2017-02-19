@@ -3,7 +3,7 @@ package steam
 import "testing"
 
 func TestGetAppList(t *testing.T) {
-	steam := NewSteam()
+	steam := NewSteam("")
 
 	apps, err := steam.GetAppList()
 	if err != nil {
@@ -18,7 +18,7 @@ func TestGetAppList(t *testing.T) {
 }
 
 func TestGetNews(t *testing.T) {
-	steam := NewSteam()
+	steam := NewSteam("")
 	o := NewOption(570)
 	o.Count = 3
 	o.MaxLength = 200
@@ -41,7 +41,7 @@ func TestGetNews(t *testing.T) {
 }
 
 func TestGetGlobalAchievement(t *testing.T) {
-	steam := NewSteam()
+	steam := NewSteam("")
 	o := NewOption(730)
 
 	achievements, err := steam.GetGlobalAchievement(o)
@@ -62,7 +62,7 @@ func TestGetGlobalAchievement(t *testing.T) {
 }
 
 func TestGetGlobalStatsForGame(t *testing.T) {
-	steam := NewSteam()
+	steam := NewSteam("")
 	o := NewOption(17740)
 	o.Count = 1
 	o.Names = []string{"global.map.emp_isle"}

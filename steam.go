@@ -5,8 +5,11 @@ const (
 )
 
 type Steam struct {
+	con *Config
 }
 
-func NewSteam() *Steam {
-	return &Steam{}
+func NewSteam(key string) *Steam {
+	return &Steam{
+		con: NewConfig(key),
+	}
 }

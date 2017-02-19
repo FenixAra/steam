@@ -1,17 +1,23 @@
 package steam
 
 import (
+	"errors"
 	"net/url"
 	"strconv"
+	"strings"
 )
 
 type Option struct {
 	AppID     int
 	Count     int
 	MaxLength int
-	Key       string
 	Names     []string
+	SteamIDs  string
 }
+
+var (
+	ErrSteamIDsExceedsLimit = errors.New("Steam IDs exceeds the max allowed steam IDs")
+)
 
 func NewOption(appID int) *Option {
 	return &Option{
@@ -19,10 +25,23 @@ func NewOption(appID int) *Option {
 	}
 }
 
-func (o *Option) GetUrlEncode() string {
+func (o *Option) SetSteamIDs(ids []string) error {
+	if len(ids) > 100 {
+		return ErrSteamIDsExceedsLimit
+	}
+
+	o.SteamIDs = strings.Join(ids, ",")
+	return nil
+}
+
+func (o *Option) GetUrlEncode(s *Steam) string {
 	u := url.Values{}
-	if o.Key != "" {
-		u.Add("key", o.Key)
+	if s.con.Key != "" {
+		u.Add("key", s.con.Key)
+	}
+
+	if o.SteamIDs != "" {
+		u.Add("steamids", o.SteamIDs)
 	}
 
 	if o.AppID > 0 {

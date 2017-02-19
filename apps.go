@@ -66,7 +66,7 @@ type NewsItem struct {
 
 // Get news related to the application specified by application's ID.
 func (s *Steam) GetNews(o *Option) (*AppNews, error) {
-	res, err := http.Get(BaseURL + "/ISteamNews/GetNewsForApp/v0002?" + o.GetUrlEncode())
+	res, err := http.Get(BaseURL + "/ISteamNews/GetNewsForApp/v0002?" + o.GetUrlEncode(s))
 	if err != nil {
 		return nil, err
 	}
@@ -101,7 +101,7 @@ type Achievement struct {
 
 // Get global acheivements overview of a specific game in percentage
 func (s *Steam) GetGlobalAchievement(o *Option) (*GlobalAchievements, error) {
-	res, err := http.Get(BaseURL + "/ISteamUserStats/GetGlobalAchievementPercentagesForApp/v0002?" + o.GetUrlEncode())
+	res, err := http.Get(BaseURL + "/ISteamUserStats/GetGlobalAchievementPercentagesForApp/v0002?" + o.GetUrlEncode(s))
 	if err != nil {
 		return nil, err
 	}
@@ -136,7 +136,7 @@ type Stat struct {
 
 // Get global stats detail for a particular achievement for the given game
 func (s *Steam) GetGlobalStatsForGame(o *Option) (*GlobalStatsResponse, error) {
-	res, err := http.Get(BaseURL + "/ISteamUserStats/GetGlobalStatsForGame/v0001?" + o.GetUrlEncode())
+	res, err := http.Get(BaseURL + "/ISteamUserStats/GetGlobalStatsForGame/v0001?" + o.GetUrlEncode(s))
 	if err != nil {
 		return nil, err
 	}
