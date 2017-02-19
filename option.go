@@ -61,6 +61,7 @@ func (o *Option) GetUrlEncode(s *Steam) string {
 		for i, name := range o.Names {
 			u.Add("name["+strconv.Itoa(i)+"]", name)
 		}
+		u.Add("count", strconv.Itoa(len(o.Names)))
 	}
 
 	u.Add("format", "json")

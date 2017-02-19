@@ -13,3 +13,7 @@ func NewSteam(key string) *Steam {
 		con: NewConfig(key),
 	}
 }
+
+func (s *Steam) SetSteamKey(key string) {
+	s.con.Key = key
+}

@@ -35,7 +35,7 @@ func TestGetNews(t *testing.T) {
 	}
 
 	if len(appNews.News.NewItems) != 3 {
-		t.Error("The number of news item is no 3.")
+		t.Error("The number of news item is not 3. Got: ", len(appNews.News.NewItems))
 		t.FailNow()
 	}
 }
@@ -64,7 +64,6 @@ func TestGetGlobalAchievement(t *testing.T) {
 func TestGetGlobalStatsForGame(t *testing.T) {
 	steam := NewSteam("")
 	o := NewOption(17740)
-	o.Count = 1
 	o.Names = []string{"global.map.emp_isle"}
 
 	stats, err := steam.GetGlobalStatsForGame(o)

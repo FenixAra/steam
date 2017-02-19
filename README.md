@@ -9,3 +9,29 @@ Steam API implementation in GoLang
     go get github.com/FenixAra/steam
 
 
+Example
+-------
+
+```go
+import (
+	"github.com/FenixAra/steam"
+)
+
+steamAPI := steam.NewSteam(steamApiKey)
+steamAPI.SetSteamKey(steamApiKey)
+
+option := steam.NewOption(appID)
+option.Count = 10
+news, err := steamAPI.GetNews(option)
+if err != nil {
+	// Handle error
+}
+
+option := steam.NewOption(0)
+option.SetSteamIDs(steamIDs)
+playerSummaries, err := steamAPI.GetPlayerSummaries(option)
+if err != nil {
+	// Handle error
+}
+
+```

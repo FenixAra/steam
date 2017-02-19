@@ -34,6 +34,11 @@ type PlayerInfo struct {
 	LocalCityID              int    `json:"loccityid"`
 }
 
+// Get player summaries using their steamids
+// Options:
+// SteamIDs(Mandatory) - You can set comma seperated steamIDs or use Option's method SetSteamIDs(steamIDs[]string)
+// Steam should have been initialized with Steam API Key
+// Or use Steam's SetSteamKey(key string) to set the Steam API key
 func (s *Steam) GetPlayerSummaries(o *Option) (*PlayerSummaries, error) {
 	res, err := http.Get(BaseURL + "/ISteamUser/GetPlayerSummaries/v0002?" + o.GetUrlEncode(s))
 	if err != nil {

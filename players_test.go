@@ -7,8 +7,8 @@ import (
 
 func TestGetPlayerSummaries(t *testing.T) {
 	steam := NewSteam(os.Getenv("STEAM_KEY"))
-	o := NewOption(17740)
-	o.SetSteamIDs([]string{"76561197960435530", "76561198146145879"})
+	o := NewOption(0)
+	o.SetSteamIDs([]string{"76561197960435530"})
 
 	playerSummaries, err := steam.GetPlayerSummaries(o)
 	if err != nil {
@@ -21,7 +21,7 @@ func TestGetPlayerSummaries(t *testing.T) {
 		t.FailNow()
 	}
 
-	if len(playerSummaries.Response.PlayerInfos) != 2 {
+	if len(playerSummaries.Response.PlayerInfos) != 1 {
 		t.Error("Unable to get playerSummaries. number of player Infos recieved is: ", len(playerSummaries.Response.PlayerInfos))
 		t.FailNow()
 	}
