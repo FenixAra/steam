@@ -32,6 +32,9 @@ type PlayerInfo struct {
 	LocalCountryCode         string `json:"loccountrycode"`
 	LocalStateCode           string `json:"locstatecode"`
 	LocalCityID              int    `json:"loccityid"`
+	GameID                   int    `json:"gameid"`
+	GameServerIP             string `json:"gameserverip"`
+	GameExtraInfo            string `json:"gameextrainfo"`
 }
 
 // Get player summaries using their steamids
@@ -58,4 +61,39 @@ func (s *Steam) GetPlayerSummaries(o *Option) (*PlayerSummaries, error) {
 	}
 
 	return playerSummaries, nil
+}
+
+type Friends struct {
+	List FriendsList `json:"friendslist"`
+}
+
+type FriendsList struct {
+	Friends []Friend `json:"friends"`
+}
+
+type Friend struct {
+	SteamID      string `json:"steamid"`
+	Relationship string `json:"relationship"`
+	FriendSince  int    `json:"friend_since"`
+}
+
+func (s *Steam) GetFriendList(o *Option) (*Friends, error) {
+	res, err := http.Get(BaseURL + "/ISteamUser/GetFriendList/v0001?" + o.GetUrlEncode(s))
+	if err != nil {
+		return nil, err
+	}
+
+	defer res.Body.Close()
+	data, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	friends := new(Friends)
+	err = json.Unmarshal(data, &friends)
+	if err != nil {
+		return nil, err
+	}
+
+	return friends, nil
 }

@@ -8,11 +8,13 @@ import (
 )
 
 type Option struct {
-	AppID     int
-	Count     int
-	MaxLength int
-	Names     []string
-	SteamIDs  string
+	AppID        int
+	Count        int
+	MaxLength    int
+	Names        []string
+	SteamIDs     string
+	SteamID      string
+	Relationship string
 }
 
 var (
@@ -42,6 +44,14 @@ func (o *Option) GetUrlEncode(s *Steam) string {
 
 	if o.SteamIDs != "" {
 		u.Add("steamids", o.SteamIDs)
+	}
+
+	if o.SteamID != "" {
+		u.Add("steamid", o.SteamID)
+	}
+
+	if o.Relationship != "" {
+		u.Add("relationship", o.Relationship)
 	}
 
 	if o.AppID > 0 {
