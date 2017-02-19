@@ -38,8 +38,11 @@ type PlayerInfo struct {
 }
 
 // Get player summaries using their steamids
+//
 // Options:
+//
 // SteamIDs(Mandatory) - You can set comma seperated steamIDs or use Option's method SetSteamIDs(steamIDs[]string)
+//
 // Steam should have been initialized with Steam API Key
 // Or use Steam's SetSteamKey(key string) to set the Steam API key
 func (s *Steam) GetPlayerSummaries(o *Option) (*PlayerSummaries, error) {
@@ -78,8 +81,11 @@ type Friend struct {
 }
 
 // Get player's friend list using their steam id
+//
 // Options:
+//
 // SteamID(Mandatory) - Steam ID of the player.
+//
 // Relationship(Madatory) - Relationship filter. Possible values are all, friend.
 func (s *Steam) GetFriendList(o *Option) (*Friends, error) {
 	res, err := http.Get(BaseURL + "/ISteamUser/GetFriendList/v0001?" + o.getUrlEncode(s))
@@ -118,9 +124,13 @@ type PlayerAchievement struct {
 }
 
 // Get player's achievements for the given app
+//
 // Options:
+//
 // SteamID(Mandatory) - Steam ID of the player you need achievement stats for.
+//
 // AppID(Mandatory) - The Application for which achievements are needed.
+//
 // l(Optional) - Language in which the achievements should be displayed.
 func (s *Steam) GetPlayerAchievements(o *Option) (*PlayerStats, error) {
 	res, err := http.Get(BaseURL + "/ISteamUserStats/GetPlayerAchievements/v0001?" + o.getUrlEncode(s))
