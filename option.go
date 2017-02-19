@@ -15,7 +15,7 @@ type Option struct {
 	SteamIDs     string
 	SteamID      string
 	Relationship string
-	Language     stirng
+	Language     string
 }
 
 var (
