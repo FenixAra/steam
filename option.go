@@ -15,18 +15,21 @@ type Option struct {
 	SteamIDs     string
 	SteamID      string
 	Relationship string
+	Language     stirng
 }
 
 var (
 	ErrSteamIDsExceedsLimit = errors.New("Steam IDs exceeds the max allowed steam IDs")
 )
 
+// Get a new Option instance. You can set an App ID to Option.
 func NewOption(appID int) *Option {
 	return &Option{
 		AppID: appID,
 	}
 }
 
+// Set steamIDs to Option
 func (o *Option) SetSteamIDs(ids []string) error {
 	if len(ids) > 100 {
 		return ErrSteamIDsExceedsLimit
@@ -36,7 +39,7 @@ func (o *Option) SetSteamIDs(ids []string) error {
 	return nil
 }
 
-func (o *Option) GetUrlEncode(s *Steam) string {
+func (o *Option) getUrlEncode(s *Steam) string {
 	u := url.Values{}
 	if s.con.Key != "" {
 		u.Add("key", s.con.Key)
@@ -48,6 +51,10 @@ func (o *Option) GetUrlEncode(s *Steam) string {
 
 	if o.SteamID != "" {
 		u.Add("steamid", o.SteamID)
+	}
+
+	if o.Language != "" {
+		u.Add("l", o.Language)
 	}
 
 	if o.Relationship != "" {

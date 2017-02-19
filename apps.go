@@ -70,7 +70,7 @@ type NewsItem struct {
 // Count(Optional) - Number of news articles you want to receive.
 // MaxLength(Optional) - Maximum length of each news entry.
 func (s *Steam) GetNews(o *Option) (*AppNews, error) {
-	res, err := http.Get(BaseURL + "/ISteamNews/GetNewsForApp/v0002?" + o.GetUrlEncode(s))
+	res, err := http.Get(BaseURL + "/ISteamNews/GetNewsForApp/v0002?" + o.getUrlEncode(s))
 	if err != nil {
 		return nil, err
 	}
@@ -107,7 +107,7 @@ type Achievement struct {
 // Options:
 // AppID(Mandatory) - App for which you need the global achievements.
 func (s *Steam) GetGlobalAchievement(o *Option) (*GlobalAchievements, error) {
-	res, err := http.Get(BaseURL + "/ISteamUserStats/GetGlobalAchievementPercentagesForApp/v0002?" + o.GetUrlEncode(s))
+	res, err := http.Get(BaseURL + "/ISteamUserStats/GetGlobalAchievementPercentagesForApp/v0002?" + o.getUrlEncode(s))
 	if err != nil {
 		return nil, err
 	}
@@ -145,7 +145,7 @@ type Stat struct {
 // AppID(Mandatory) - App for which you need the global stats.
 // Names(Mandatory, atleast 1) - The achievement name/names for which you need the global stats.
 func (s *Steam) GetGlobalStatsForGame(o *Option) (*GlobalStatsResponse, error) {
-	res, err := http.Get(BaseURL + "/ISteamUserStats/GetGlobalStatsForGame/v0001?" + o.GetUrlEncode(s))
+	res, err := http.Get(BaseURL + "/ISteamUserStats/GetGlobalStatsForGame/v0001?" + o.getUrlEncode(s))
 	if err != nil {
 		return nil, err
 	}

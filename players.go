@@ -43,7 +43,7 @@ type PlayerInfo struct {
 // Steam should have been initialized with Steam API Key
 // Or use Steam's SetSteamKey(key string) to set the Steam API key
 func (s *Steam) GetPlayerSummaries(o *Option) (*PlayerSummaries, error) {
-	res, err := http.Get(BaseURL + "/ISteamUser/GetPlayerSummaries/v0002?" + o.GetUrlEncode(s))
+	res, err := http.Get(BaseURL + "/ISteamUser/GetPlayerSummaries/v0002?" + o.getUrlEncode(s))
 	if err != nil {
 		return nil, err
 	}
@@ -77,8 +77,12 @@ type Friend struct {
 	FriendSince  int    `json:"friend_since"`
 }
 
+// Get player's friend list using their steam id
+// Options:
+// SteamID(Mandatory) - Steam ID of the player.
+// Relationship(Madatory) - Relationship filter. Possible values are all, friend.
 func (s *Steam) GetFriendList(o *Option) (*Friends, error) {
-	res, err := http.Get(BaseURL + "/ISteamUser/GetFriendList/v0001?" + o.GetUrlEncode(s))
+	res, err := http.Get(BaseURL + "/ISteamUser/GetFriendList/v0001?" + o.getUrlEncode(s))
 	if err != nil {
 		return nil, err
 	}
@@ -96,4 +100,45 @@ func (s *Steam) GetFriendList(o *Option) (*Friends, error) {
 	}
 
 	return friends, nil
+}
+
+type PlayerStats struct {
+	Stats PlayerStatistics `json:"playerstats"`
+}
+
+type PlayerStatistics struct {
+	SteamID      string              `json:"steamID"`
+	GameName     string              `json:"gameName"`
+	Achievements []PlayerAchievement `json:"achievements"`
+}
+
+type PlayerAchievement struct {
+	APIName  string `json:"apiname"`
+	Achieved int    `json:"achieved"`
+}
+
+// Get player's achievements for the given app
+// Options:
+// SteamID(Mandatory) - Steam ID of the player you need achievement stats for.
+// AppID(Mandatory) - The Application for which achievements are needed.
+// l(Optional) - Language in which the achievements should be displayed.
+func (s *Steam) GetPlayerAchievements(o *Option) (*PlayerStats, error) {
+	res, err := http.Get(BaseURL + "/ISteamUserStats/GetPlayerAchievements/v0001?" + o.getUrlEncode(s))
+	if err != nil {
+		return nil, err
+	}
+
+	defer res.Body.Close()
+	data, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	playerStats := new(PlayerStats)
+	err = json.Unmarshal(data, &playerStats)
+	if err != nil {
+		return nil, err
+	}
+
+	return playerStats, nil
 }
