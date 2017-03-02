@@ -80,17 +80,39 @@ func TestGetPlayerAchievements(t *testing.T) {
 
 	playerStats, err := steam.GetPlayerAchievements(o)
 	if err != nil {
+		t.Error("Unable to get player achievements. Err: ", err)
+		t.FailNow()
+	}
+
+	if playerStats == nil {
+		t.Error("Unable to get player achievements. Value is nil.")
+		t.FailNow()
+	}
+
+	if len(playerStats.Stats.Achievements) != 520 {
+		t.Error("Unable to player achievements. number of achievements Infos recieved is: ", len(playerStats.Stats.Achievements))
+		t.FailNow()
+	}
+}
+
+func TestGetUserStatsForGame(t *testing.T) {
+	steam := NewSteam(os.Getenv("STEAM_KEY"))
+	o := NewOption(440)
+	o.SteamID = "76561197972495328"
+
+	playerStats, err := steam.GetUserStatsForGame(o)
+	if err != nil {
 		t.Error("Unable to get friends list. Err: ", err)
 		t.FailNow()
 	}
 
 	if playerStats == nil {
-		t.Error("Unable to get friends. Value is nil.")
+		t.Error("Unable to get users stats for the game. Value is nil.")
 		t.FailNow()
 	}
 
-	if len(playerStats.Stats.Achievements) != 520 {
-		t.Error("Unable to get friends. number of player Infos recieved is: ", len(playerStats.Stats.Achievements))
+	if len(playerStats.Stats.Stats) != 463 {
+		t.Error("Unable to get users stats for the game. number of stats Infos recieved is: ", len(playerStats.Stats.Stats))
 		t.FailNow()
 	}
 }

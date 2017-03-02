@@ -37,7 +37,7 @@ type PlayerInfo struct {
 	GameExtraInfo            string `json:"gameextrainfo"`
 }
 
-// Get player summaries using their steamids
+// Get player summaries using their steamids. Version: v0002
 //
 // Options:
 //
@@ -80,7 +80,7 @@ type Friend struct {
 	FriendSince  int    `json:"friend_since"`
 }
 
-// Get player's friend list using their steam id
+// Get player's friend list using their steam id. Version: v0001
 //
 // Options:
 //
@@ -116,6 +116,7 @@ type PlayerStatistics struct {
 	SteamID      string              `json:"steamID"`
 	GameName     string              `json:"gameName"`
 	Achievements []PlayerAchievement `json:"achievements"`
+	Stats        []PlayerStat        `json:"stats"`
 }
 
 type PlayerAchievement struct {
@@ -123,7 +124,12 @@ type PlayerAchievement struct {
 	Achieved int    `json:"achieved"`
 }
 
-// Get player's achievements for the given app
+type PlayerStat struct {
+	Name  string `json:"name"`
+	Value int    `json:"value"`
+}
+
+// Get player's achievements for the given app. Version: v0001
 //
 // Options:
 //
@@ -134,6 +140,36 @@ type PlayerAchievement struct {
 // l(Optional) - Language in which the achievements should be displayed.
 func (s *Steam) GetPlayerAchievements(o *Option) (*PlayerStats, error) {
 	res, err := http.Get(BaseURL + "/ISteamUserStats/GetPlayerAchievements/v0001?" + o.getUrlEncode(s))
+	if err != nil {
+		return nil, err
+	}
+
+	defer res.Body.Close()
+	data, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	playerStats := new(PlayerStats)
+	err = json.Unmarshal(data, &playerStats)
+	if err != nil {
+		return nil, err
+	}
+
+	return playerStats, nil
+}
+
+// Get list of achievements by this user for the given app/game. Version: v0002
+//
+// Options:
+//
+// SteamID(Mandatory) - Steam ID of the player you need achievement stats for.
+//
+// AppID(Mandatory) - The Application for which achievements are needed.
+//
+// l(Optional) - Language in which the achievements should be displayed.
+func (s *Steam) GetUserStatsForGame(o *Option) (*PlayerStats, error) {
+	res, err := http.Get(BaseURL + "/ISteamUserStats/GetUserStatsForGame/v0002?" + o.getUrlEncode(s))
 	if err != nil {
 		return nil, err
 	}

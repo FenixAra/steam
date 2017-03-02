@@ -64,7 +64,7 @@ type NewsItem struct {
 	FeedName      string    `json:"feedname"`
 }
 
-// Get news related to the application specified by application's ID.
+// Get news related to the application specified by application's ID. Version: v0002
 //
 // Options:
 //
@@ -107,7 +107,7 @@ type Achievement struct {
 	Percentage float32 `json:"percent"`
 }
 
-// Get global acheivements overview of a specific game in percentage
+// Get global acheivements overview of a specific game in percentage. Version: v0002
 //
 // Options:
 //
@@ -146,7 +146,7 @@ type Stat struct {
 	Total string `json:"total"`
 }
 
-// Get global stats detail for a particular achievement for the given game
+// Get global stats detail for a particular achievement for the given game. Version: v0001
 //
 // Options:
 //
