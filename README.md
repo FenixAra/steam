@@ -8,6 +8,11 @@ Steam API implementation in GoLang
 
     go get github.com/FenixAra/steam
 
+To run tests Add your steam API key to STEAM_KEY environment variable.
+
+    export STEAM_KEY={your key}
+    go test
+
 
 Example
 -------
