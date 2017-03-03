@@ -1,6 +1,7 @@
 package steam
 
 import (
+	"encoding/json"
 	"errors"
 	"net/url"
 	"strconv"
@@ -8,14 +9,25 @@ import (
 )
 
 type Option struct {
-	AppID        int
-	Count        int
-	MaxLength    int
-	Names        []string
-	SteamIDs     string
-	SteamID      string
-	Relationship string
-	Language     string
+	AppID                  int
+	Count                  int
+	MaxLength              int
+	Names                  []string
+	SteamIDs               string
+	SteamID                string
+	Relationship           string
+	Language               string
+	IncludeAppInfo         bool
+	IncludePlayedFreeGames bool
+	HasJSONData            bool
+	JSONData               JSONData
+}
+
+type JSONData struct {
+	SteamID                int   `json:"steamid"`
+	AppIDs                 []int `json:"appids_filter"`
+	IncludeAppInfo         bool  `json:"include_appinfo"`
+	IncludePlayedFreeGames bool  `json:"include_played_free_games"`
 }
 
 var (
@@ -26,6 +38,9 @@ var (
 func NewOption(appID int) *Option {
 	return &Option{
 		AppID: appID,
+		JSONData: JSONData{
+			AppIDs: []int{},
+		},
 	}
 }
 
@@ -39,10 +54,53 @@ func (o *Option) SetSteamIDs(ids []string) error {
 	return nil
 }
 
+// Set APP IDs JSON filters
+func (o *Option) SetAppIDs(appIDs []int) {
+	o.JSONData.AppIDs = appIDs
+	o.HasJSONData = true
+}
+
+// Set the steam ID filter, If IsService is set true then the filters are only sent as JSON input
+func (o *Option) SetSteamID(steamID int, IsService bool) {
+	if IsService {
+		o.JSONData.SteamID = steamID
+		o.HasJSONData = true
+	} else {
+		o.SteamID = strconv.Itoa(steamID)
+	}
+}
+
+func (o *Option) SetIncludeAppInfo(includeAppInfo bool, IsService bool) {
+	if IsService {
+		o.JSONData.IncludeAppInfo = includeAppInfo
+		o.HasJSONData = true
+	} else {
+		o.IncludeAppInfo = includeAppInfo
+	}
+}
+
+func (o *Option) SetIncludePlayedFreeGames(includePlayedFreeGames bool, IsService bool) {
+	if IsService {
+		o.JSONData.IncludePlayedFreeGames = includePlayedFreeGames
+		o.HasJSONData = true
+	} else {
+		o.IncludePlayedFreeGames = includePlayedFreeGames
+	}
+}
+
 func (o *Option) getUrlEncode(s *Steam) string {
 	u := url.Values{}
+
+	u.Add("format", "json")
+
 	if s.con.Key != "" {
 		u.Add("key", s.con.Key)
+	}
+
+	if o.HasJSONData {
+		content, _ := json.Marshal(o.JSONData)
+		u.Add("input_json", string(content))
+		return u.Encode()
 	}
 
 	if o.SteamIDs != "" {
@@ -81,6 +139,13 @@ func (o *Option) getUrlEncode(s *Steam) string {
 		u.Add("count", strconv.Itoa(len(o.Names)))
 	}
 
-	u.Add("format", "json")
+	if o.IncludeAppInfo {
+		u.Add("include_appinfo", strconv.FormatBool(o.IncludeAppInfo))
+	}
+
+	if o.IncludePlayedFreeGames {
+		u.Add("include_played_free_games", strconv.FormatBool(o.IncludePlayedFreeGames))
+	}
+
 	return u.Encode()
 }

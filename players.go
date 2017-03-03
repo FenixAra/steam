@@ -188,3 +188,55 @@ func (s *Steam) GetUserStatsForGame(o *Option) (*PlayerStats, error) {
 
 	return playerStats, nil
 }
+
+type GamesOwned struct {
+	GamesOwnedResponse GamesOwnedResponse `json:"response"`
+}
+
+type GamesOwnedResponse struct {
+	GameCount int    `json:"game_count"`
+	Games     []Game `json:"games"`
+}
+
+type Game struct {
+	ID                       int    `json:"appid"`
+	Name                     string `json:"name"`
+	PlayTimeForever          int    `json:"playtime_forever"`
+	ImgIconURL               string `json:"img_icon_url"`
+	ImgLogoURL               string `json:"img_logo_url"`
+	HasCommunityVisibleStats bool   `json:"has_community_visible_stats"`
+}
+
+// Get list of games a player owns along with some playtime information, if the profile is publicly visible. Private, friends-only, and other privacy settings are not supported unless you are asking for your own personal details (ie the steam API key you are using is linked to the steamid you are requesting). Version: v0001
+//
+// Options:
+//
+// This API is a service API, you set the filters by using IsService=true.
+//
+// SteamID(Mandatory) - Steam ID of the player you need achievement stats for.
+//
+// IncludeAppInfo(Optional) - Include game name and logo information in the output. The default is to return appids only.
+//
+// IncludePlayedFreeGames(Optional) - By default, free games like Team Fortress 2 are excluded (as technically everyone owns them). If include_played_free_games is set, they will be returned if the player has played them at some point. This is the same behavior as the games list on the Steam Community.
+//
+// AppIDs(Optional) - App IDs to verify if the user owns it.
+func (s *Steam) GetOwnedGames(o *Option) (*GamesOwned, error) {
+	res, err := http.Get(BaseURL + "/IPlayerService/GetOwnedGames/v0001?" + o.getUrlEncode(s))
+	if err != nil {
+		return nil, err
+	}
+
+	defer res.Body.Close()
+	data, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	gamesOWned := new(GamesOwned)
+	err = json.Unmarshal(data, &gamesOWned)
+	if err != nil {
+		return nil, err
+	}
+
+	return gamesOWned, nil
+}
