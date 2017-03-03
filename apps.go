@@ -154,22 +154,7 @@ type Stat struct {
 //
 // Names(Mandatory, atleast 1) - The achievement name/names for which you need the global stats.
 func (s *Steam) GetGlobalStatsForGame(o *Option) (*GlobalStatsResponse, error) {
-	res, err := http.Get(BaseURL + "/ISteamUserStats/GetGlobalStatsForGame/v0001?" + o.getUrlEncode(s))
-	if err != nil {
-		return nil, err
-	}
-
-	defer res.Body.Close()
-	data, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	stats := new(GlobalStatsResponse)
-	err = json.Unmarshal(data, &stats)
-	if err != nil {
-		return nil, err
-	}
-
-	return stats, nil
+	url := BaseURL + "/ISteamUserStats/GetGlobalStatsForGame/v0001?" + o.getUrlEncode(s)
+	stats, err := makeGetRequest(url, &GlobalStatsResponse{})
+	return stats.(*GlobalStatsResponse), err
 }
